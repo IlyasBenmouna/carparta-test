@@ -1,0 +1,22 @@
+{
+  "printWidth": 80,
+  "semi": true,
+  "tabWidth": 2,
+  "singleQuote": true,
+  "jsxSingleQuote": true,
+  "trailingComma": "es5",
+  "bracketSpacing": true,
+  "singleAttributePerLine": true,
+  "plugins": [
+    "@trivago/prettier-plugin-sort-imports",
+    "prettier-plugin-tailwindcss"
+  ],
+  "importOrder": [
+    "^@core/(.*)$",
+    "<THIRD_PARTY_MODULES>",
+    "^@server/(.*)$",
+    "'^@ui/(.*)$'",
+    "^[./]"
+  ],
+  "tailwindFunctions": ["cx"]
+}
