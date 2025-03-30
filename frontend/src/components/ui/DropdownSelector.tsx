@@ -21,14 +21,17 @@ export const DropdownSelector = ({
   onValueChange,
   listOfOptions = [],
 }: DropdownSelectorProps) => {
+  const noOptions = listOfOptions.length === 0;
   return (
-    <DropdownMenu>
+    <DropdownMenu data-testid={placeholder}>
       <DropdownMenuTrigger asChild>
         <Button
           variant='outline'
-          className='w-64 justify-between border-gray-500'
+          className='w-64 min-w-fit justify-between border-gray-500'
         >
-          {selectedField ?? placeholder}
+          {noOptions
+            ? `No options found, please refresh or try a different vehicle`
+            : (selectedField ?? placeholder)}
           <ChevronDown />
         </Button>
       </DropdownMenuTrigger>

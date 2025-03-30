@@ -1,15 +1,15 @@
-import { SelectDetailsPage } from '@/components/pages/SelectDetailsPage.tsx';
+import { SelectDetailsPage } from '@/components/pages/SelectDetailsPage';
 import { SelectMakePage } from '@/components/pages/SelectMakePage';
 import { SelectModelPage } from '@/components/pages/SelectModelPage';
-import { SelectSubModelPage } from '@/components/pages/SelectSubModelPage.tsx';
+import { SelectSubModelPage } from '@/components/pages/SelectSubModelPage';
 import { SummaryPage } from '@/components/pages/SummaryPage';
+import { useState, useEffect } from 'react';
 import {
   fetchDetails,
   fetchMakes,
   fetchModels,
   fetchSubModels,
-} from '@/components/util.ts';
-import { useState, useEffect } from 'react';
+} from '../util.ts';
 
 export type StepState =
   | 'initial'
@@ -36,6 +36,8 @@ export const VehiclePickingController = () => {
     engineSize: null,
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const [makes, setMakes] = useState<string[]>([]);
   const [models, setModels] = useState<string[]>([]);
   const [submodels, setSubModels] = useState<string[]>([]);
@@ -48,37 +50,49 @@ export const VehiclePickingController = () => {
   const [currentStep, setCurrentStep] = useState<StepState>('initial');
 
   useEffect(() => {
-    fetchMakes().then(setMakes);
+    setIsLoading(true);
+    fetchMakes()
+      .then(setMakes)
+      .catch(console.error)
+      .finally(() => setIsLoading(false));
   }, []);
 
   useEffect(() => {
     if (selectedMake) {
-      fetchModels(selectedMake).then(setModels);
+      setIsLoading(true);
+      fetchModels(selectedMake)
+        .then(setModels)
+        .catch(console.error)
+        .finally(() => setIsLoading(false));
     }
   }, [selectedMake]);
 
   useEffect(() => {
     if (selectedMake && selectedModel) {
-      fetchSubModels(selectedMake, selectedModel).then(
-        (subModels: string[]) => {
+      setIsLoading(true);
+      fetchSubModels(selectedMake, selectedModel)
+        .then((subModels) => {
           setSubModels(subModels ?? []);
           if (subModels.length === 0) handleNextButtonClick();
-        }
-      );
+        })
+        .catch(console.error)
+        .finally(() => setIsLoading(false));
     }
   }, [selectedModel]);
 
   useEffect(() => {
     if (selectedMake && selectedModel) {
-      fetchDetails(selectedMake, selectedModel, selectedSubModel).then(
-        (apiData) => {
+      setIsLoading(true);
+      fetchDetails(selectedMake, selectedModel, selectedSubModel)
+        .then((availableDetails) => {
           setAvailableDetails({
-            transmissions: apiData.availableTransmissions || [],
-            fuels: apiData.availableFuels || [],
-            engineSizes: apiData.engineSizeOptions || [],
+            transmissions: availableDetails.availableTransmissions || [],
+            fuels: availableDetails.availableFuels || [],
+            engineSizes: availableDetails.engineSizeOptions || [],
           });
-        }
-      );
+        })
+        .catch(console.error)
+        .finally(() => setIsLoading(false));
     }
   }, [selectedSubModel, currentStep]);
 
@@ -137,6 +151,14 @@ export const VehiclePickingController = () => {
       [detail]: value,
     }));
   };
+
+  if (isLoading) {
+    return (
+      <div className='mx-auto w-full max-w-2xl p-4 text-center'>
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className='mx-auto w-full max-w-2xl'>

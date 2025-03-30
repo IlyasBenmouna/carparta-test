@@ -47,9 +47,9 @@ export const SelectDetailsPage = ({
                 <div className='flex w-full gap-4'>
                   <CalendarIcon />
                   {selectedDetails.date ? (
-                    format(selectedDetails.date, 'PPP')
+                    format(selectedDetails.date, 'MMMM yyyy')
                   ) : (
-                    <span>Pick a date</span>
+                    <span>Pick a month & year</span>
                   )}
                   <ChevronDownIcon className='ml-auto' />
                 </div>
@@ -58,13 +58,11 @@ export const SelectDetailsPage = ({
             <PopoverContent className='w-auto p-0'>
               <Calendar
                 className='border border-slate-50 bg-black'
-                mode='single'
-                onSelect={(date) => {
+                onMonthYearChange={(date) => {
                   if (date) {
                     onDetailSelect('date', date);
                   }
                 }}
-                initialFocus
               />
             </PopoverContent>
           </Popover>

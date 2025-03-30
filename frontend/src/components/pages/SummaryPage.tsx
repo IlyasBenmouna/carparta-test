@@ -60,19 +60,23 @@ export const SummaryPage = ({
           </Button>
         </div>
 
-        <div className='flex items-center justify-between gap-4'>
-          <div className='flex flex-col gap-2'>
-            <span className='text-sm font-medium text-gray-500'>Submodel</span>
-            <span className='text-lg'>{submodel}</span>
+        {submodel && (
+          <div className='flex items-center justify-between gap-4'>
+            <div className='flex flex-col gap-2'>
+              <span className='text-sm font-medium text-gray-500'>
+                Submodel
+              </span>
+              <span className='text-lg'>{submodel}</span>
+            </div>
+            <Button
+              size='sm'
+              onClick={() => onEdit('model-selected')}
+              className='w-16'
+            >
+              Edit
+            </Button>
           </div>
-          <Button
-            size='sm'
-            onClick={() => onEdit('model-selected')}
-            className='w-16'
-          >
-            Edit
-          </Button>
-        </div>
+        )}
 
         {modelDetails.date && (
           <div className='flex items-center justify-between gap-4'>
