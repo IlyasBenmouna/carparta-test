@@ -46,20 +46,28 @@ app.get('/api/submodels', (req, res) => {
 
 app.get('/api/details', (req, res) => {
     const { make, model, submodel } = req.query;
-    if (!make) return res.status(400).json({ error: 'Make parameters required' });
+    if (!make) return res.status(400).json({ error: 'Make parameter required' });
     if (!model) return res.status(400).json({ error: 'Model parameter required' });
 
-    const filteredVehicles = vehicles.filter(vehicle =>
+    let filteredVehicles = vehicles.filter(vehicle =>
         vehicle.make === make &&
-        vehicle.model === model &&
-        (submodel ? vehicle.submodel === submodel : true)
+        vehicle.model === model
     );
 
+    if (submodel) {
+        filteredVehicles = filteredVehicles.filter(vehicle =>
+            vehicle.submodel === (submodel === 'null' ? null : submodel)
+        );
+    } else {
+        filteredVehicles = filteredVehicles.filter(vehicle =>
+            vehicle.submodel === null
+        );
+    }
 
     const response = {
-        availableTransmissions: [...new Set(filteredVehicles.map(vehicle => vehicle.transmission))].sort(),
-        availableFuels: [...new Set(filteredVehicles.map(vehicle => vehicle.fuel))],
-        engineSizeOptions: [...new Set(filteredVehicles.map(vehicle => vehicle.engineSize))].sort(),
+        transmissions: [...new Set(filteredVehicles.map(v => v.transmission))].filter(Boolean).sort(),
+        fuels: [...new Set(filteredVehicles.map(v => v.fuel))].filter(Boolean).sort(),
+        engineSizes: [...new Set(filteredVehicles.map(v => v.engineSize))].filter(Boolean).sort(),
     };
 
     res.json(response);

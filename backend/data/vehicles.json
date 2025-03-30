@@ -1476,6 +1476,15 @@
     "engineSize": "0.0"
   },
   {
+    "make": "KIA",
+    "model": "MODEL 3",
+    "submodel": "SPORT",
+    "dateOfManufacture": "11/2015",
+    "transmission": "Automatic",
+    "fuel": "Electric",
+    "engineSize": "3.0"
+  },
+  {
     "make": "JEEP",
     "model": "MODEL 3",
     "submodel": "BASE",
